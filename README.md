@@ -16,7 +16,7 @@ config/.env.example
 
 - https://www.postgresql.org/
 
-### Расширения для указанной в **.env** БД:
+### Необходимо для указанной в .env БД установить расширения:
 
 ```
 CREATE EXTENSION "uuid-ossp";
