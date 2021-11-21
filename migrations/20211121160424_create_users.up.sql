@@ -9,7 +9,8 @@ CREATE TABLE users
 CREATE FUNCTION generate_apikey() RETURNS trigger AS
 $generate_apikey$
 BEGIN
-    UPDATE users SET apikey = '' WHERE id = NEW.id;
+    UPDATE users SET apikey = uuid_generate_v5(uuid_ns_oid(), concat(NEW.created_at, NEW.login)) WHERE id = NEW.id;
+    RETURN NEW;
 END;
 $generate_apikey$ LANGUAGE plpgsql;
 
