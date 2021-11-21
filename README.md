@@ -14,7 +14,7 @@ config/.env.example
 
 ### БД:
 
-https://www.postgresql.org/
+- https://www.postgresql.org/
 
 ### Расширения для указанной в **.env** БД:
 
