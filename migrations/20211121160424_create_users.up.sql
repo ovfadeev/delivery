@@ -2,7 +2,7 @@ CREATE TABLE users
 (
     id         serial      not null primary key,
     created_at timestamp   not null default current_timestamp,
-    login      varchar(50) not null,
+    login      varchar(50) not null unique,
     apikey     varchar(100)
 );
 
