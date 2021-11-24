@@ -1,9 +1,13 @@
 package server
 
 import (
+	"delivery/internal/app/model/repository"
 	"delivery/internal/app/store"
+	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
+	"io"
 	"net/http"
 )
 
@@ -55,27 +59,48 @@ func (s *Server) configLogger() error {
 
 func (s *Server) configRouter() {
 	s.router.HandleFunc("/points", s.handlePoints())
+	s.router.HandleFunc("/users", s.handleUsers()) // funct test query users
 }
 
 func (s *Server) handlePoints() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		rU := fmt.Sprintf("%s", r.Header.Get("User"))
+		rK := fmt.Sprintf("%s", r.Header.Get("Key"))
 
-		s.logger.Info("Get points read client: " + r.RemoteAddr)
+		if rU != "" && rK != "" {
+			s.logger.Info(fmt.Sprintf("User: %s, requested points. Client IP: %s", rU, r.RemoteAddr))
 
-		//rU := repository.UserRepository{s.store}
-		//u, err := rU.GetByLogin(string("ima"))
-		//if err != nil {
-		//	io.WriteString(w, err.Error())
-		//}
-		//
-		//b, err := json.Marshal(u)
-		//if err != nil {
-		//	return
-		//}
-		//_, err = io.WriteString(w, string(b))
-		//if err != nil {
-		//	return
-		//}
+			u := repository.UserRepository{s.store}
+			uM, err := u.GetByLoginKey(rU, rK)
+			if err != nil || uM.Id < 0 {
+				s.logger.Error(err.Error())
+				http.Error(w, ErrorNoLogin, http.StatusBadRequest)
+			} else {
+				w.Write([]byte("get points"))
+			}
+		} else {
+			http.Error(w, ErrorNoLogin, http.StatusBadRequest)
+		}
+	}
+}
+
+func (s *Server) handleUsers() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		rU := repository.UserRepository{s.store}
+		u, err := rU.GetByLogin(string("ima"))
+		if err != nil {
+			io.WriteString(w, err.Error())
+		}
+
+		b, err := json.Marshal(u)
+		if err != nil {
+			return
+		}
+		_, err = io.WriteString(w, string(b))
+		if err != nil {
+			return
+		}
 	}
 }
 

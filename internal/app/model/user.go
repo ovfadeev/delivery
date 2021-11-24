@@ -1,9 +1,9 @@
 package model
 
 type Users struct {
-	Id int
+	Id     int
 	Create string
 	Update string
-	Login string
+	Login  string
 	Apikey string
 }
