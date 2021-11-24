@@ -3,7 +3,6 @@ package repository
 import (
 	"delivery/internal/app/model"
 	"delivery/internal/app/store"
-	"fmt"
 )
 
 type UserRepository struct {
@@ -49,7 +48,7 @@ func (r *UserRepository) GetByLogin(login string) (*model.Users, error) {
 func (r *UserRepository) GetByLoginKey(login string, key string) (*model.Users, error) {
 	u := &model.Users{}
 	if err := r.Store.Db.QueryRow(
-		fmt.Sprintf("SELECT id FROM %s WHERE login = $1, apikey = $2", table),
+		"SELECT id FROM "+table+" WHERE login = $1 AND apikey = $2",
 		login,
 		key,
 	).Scan(
