@@ -4,7 +4,6 @@ import (
 	"delivery/internal/app/store"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-	"io"
 	"net/http"
 )
 
@@ -63,10 +62,20 @@ func (s *Server) handlePoints() http.HandlerFunc {
 
 		s.logger.Info("Get points read client: " + r.RemoteAddr)
 
-		_, err := io.WriteString(w, "get points")
-		if err != nil {
-			return
-		}
+		//rU := repository.UserRepository{s.store}
+		//u, err := rU.GetByLogin(string("ima"))
+		//if err != nil {
+		//	io.WriteString(w, err.Error())
+		//}
+		//
+		//b, err := json.Marshal(u)
+		//if err != nil {
+		//	return
+		//}
+		//_, err = io.WriteString(w, string(b))
+		//if err != nil {
+		//	return
+		//}
 	}
 }
 
