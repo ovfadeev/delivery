@@ -7,8 +7,9 @@ import (
 )
 
 type Store struct {
-	DB   *sql.DB
-	user *repository.UserRepository
+	DB    *sql.DB
+	user  *repository.UserRepository
+	point *repository.PointRepository
 }
 
 func New(config *Config) *Store {
@@ -41,4 +42,12 @@ func (s *Store) User() *repository.UserRepository {
 	}
 
 	return s.user
+}
+
+func (s *Store) Point() *repository.PointRepository {
+	if s.point == nil {
+		s.point = &repository.PointRepository{s.DB}
+	}
+
+	return s.point
 }

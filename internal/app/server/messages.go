@@ -3,19 +3,19 @@ package server
 import "fmt"
 
 var (
-	ErrorNoLogin     = "Access danied"
-	ReqPointsSuccess = "User: %s, requested points successful. Client IP: %s"
-	ReqPointsFail = "User: %s, requested points error auth. Client IP: %s"
+	errorNoLogin     = "Access danied"
+	reqPointsSuccess = "User: %s, requested points successful. Client IP: %s"
+	reqPointsFail    = "User: %s, requested points error auth. Client IP: %s"
 )
 
-func msgErrorNoLogin() string {
-	return ErrorNoLogin
+func (s *Server) msgErrorNoLogin() string {
+	return errorNoLogin
 }
 
-func msgReqPointsSuccess(user string, ip string) string {
-	return fmt.Sprintf(ReqPointsSuccess, user, ip)
+func (s *Server) msgReqPointsSuccess(user string, ip string) string {
+	return fmt.Sprintf(reqPointsSuccess, user, ip)
 }
 
-func msgReqPointsFail(user string, ip string) string {
-	return fmt.Sprintf(ReqPointsFail, user, ip)
+func (s *Server) msgReqPointsFail(user string, ip string) string {
+	return fmt.Sprintf(reqPointsFail, user, ip)
 }

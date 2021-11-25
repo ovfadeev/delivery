@@ -59,21 +59,25 @@ func (s *Server) configRouter() {
 
 func (s *Server) handlePoints() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		hL, hK := getHeaderForAuth(r.Header)
+		hL, hK := s.getHeaderForAuth(r.Header)
 
 		if hL != "" && hK != "" {
-			s.logger.Info(msgReqPointsSuccess(hL, r.RemoteAddr))
+			s.logger.Info(s.msgReqPointsSuccess(hL, r.RemoteAddr))
 
 			uM, err := s.store.User().GetByLoginKey(hL, hK)
 			if err != nil || uM.Id < 0 {
 				s.logger.Error(err.Error())
-				http.Error(w, msgErrorNoLogin(), http.StatusBadRequest)
+				http.Error(w, s.msgErrorNoLogin(), http.StatusBadRequest)
 			} else {
-				w.Write([]byte("get points"))
+				p, err := s.getPointsFromCity(r.URL.Query().Get("city"))
+				if err != nil {
+					s.logger.Error(err.Error())
+				}
+				w.Write(p)
 			}
 		} else {
-			s.logger.Error(msgReqPointsFail(hL, r.RemoteAddr))
-			http.Error(w, msgErrorNoLogin(), http.StatusBadRequest)
+			s.logger.Error(s.msgReqPointsFail(hL, r.RemoteAddr))
+			http.Error(w, s.msgErrorNoLogin(), http.StatusBadRequest)
 		}
 	}
 }
