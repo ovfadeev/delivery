@@ -55,6 +55,9 @@ func (s *Store) Point() *repository.PointRepository {
 
 func (s *Store) GetUserLogin(login string, key string) (int, error) {
 	u, err := s.User().GetByLoginKey(login, key)
+	if err != nil {
+		return 0, err
+	}
 	return u.Id, err
 
 }

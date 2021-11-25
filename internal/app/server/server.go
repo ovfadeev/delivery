@@ -67,7 +67,7 @@ func (s *Server) handlePoints() http.HandlerFunc {
 			idU, err := s.store.GetUserLogin(hL, hK)
 			if err != nil || idU < 0 {
 				s.logger.Error(err.Error())
-				http.Error(w, s.msgErrorNoLogin(), http.StatusBadRequest)
+				http.Error(w, s.msgErrorNoLogin(), http.StatusUnauthorized)
 			} else {
 				if z := r.URL.Query().Get("zip"); z != "" {
 					l, err := s.store.GetPointsFromZip(z)
@@ -90,7 +90,7 @@ func (s *Server) handlePoints() http.HandlerFunc {
 			}
 		} else {
 			s.logger.Error(s.msgReqPointsFail(hL, r.RemoteAddr))
-			http.Error(w, s.msgErrorNoLogin(), http.StatusBadRequest)
+			http.Error(w, s.msgErrorNoLogin(), http.StatusUnauthorized)
 		}
 	}
 }
