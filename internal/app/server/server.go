@@ -1,9 +1,7 @@
 package server
 
 import (
-	"delivery/internal/app/model/repository"
 	"delivery/internal/app/store"
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -16,7 +14,7 @@ type Server struct {
 	store  *store.Store
 }
 
-func New(config *Config) *Server {
+func NewConfig(config *Config) *Server {
 	return &Server{
 		config: config,
 		logger: logrus.New(),
@@ -61,28 +59,21 @@ func (s *Server) configRouter() {
 
 func (s *Server) handlePoints() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		rU := fmt.Sprintf("%s", r.Header.Get("User"))
-		rK := fmt.Sprintf("%s", r.Header.Get("Key"))
+		hL, hK := getHeaderForAuth(r.Header)
 
-		if rU != "" && rK != "" {
-			s.logger.Info(
-				fmt.Sprintf(
-					"User: %s, requested points successful. Client IP: %s",
-					rU,
-					r.RemoteAddr,
-				),
-			)
+		if hL != "" && hK != "" {
+			s.logger.Info(msgReqPointsSuccess(hL, r.RemoteAddr))
 
-			u := repository.UserRepository{s.store}
-			uM, err := u.GetByLoginKey(rU, rK)
+			uM, err := s.store.User().GetByLoginKey(hL, hK)
 			if err != nil || uM.Id < 0 {
 				s.logger.Error(err.Error())
-				http.Error(w, ErrorNoLogin, http.StatusBadRequest)
+				http.Error(w, msgErrorNoLogin(), http.StatusBadRequest)
 			} else {
 				w.Write([]byte("get points"))
 			}
 		} else {
-			http.Error(w, ErrorNoLogin, http.StatusBadRequest)
+			s.logger.Error(msgReqPointsFail(hL, r.RemoteAddr))
+			http.Error(w, msgErrorNoLogin(), http.StatusBadRequest)
 		}
 	}
 }
@@ -90,7 +81,7 @@ func (s *Server) handlePoints() http.HandlerFunc {
 func (s *Server) configStore() error {
 	st := store.New(s.config.Store)
 
-	if err := st.Open(); err != nil {
+	if err := st.Open(s.config.DBUrl); err != nil {
 		return err
 	}
 

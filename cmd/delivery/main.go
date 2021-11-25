@@ -26,7 +26,7 @@ func main() {
 	config := server.DefaultConfig()
 	config.ServerAddr = os.Getenv("SERVER_ADDR")
 	config.LogLevel = os.Getenv("LOG_LEVEL")
-	config.Store.DbUrl = fmt.Sprintf(
+	config.DBUrl = fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -36,7 +36,7 @@ func main() {
 		os.Getenv("DB_SSLMODE"),
 	)
 
-	s := server.New(config)
+	s := server.NewConfig(config)
 	if err := s.Start(); err != nil {
 		log.Fatal(err)
 	}

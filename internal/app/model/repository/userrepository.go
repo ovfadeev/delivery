@@ -1,28 +1,28 @@
 package repository
 
 import (
+	"database/sql"
 	"delivery/internal/app/model"
-	"delivery/internal/app/store"
 )
 
 type UserRepository struct {
-	Store *store.Store
+	DB *sql.DB
 }
 
-var table = "users"
+var tableUser = "users"
 
 func (r *UserRepository) Create(u *model.Users) error {
-	return r.Store.Db.QueryRow(
-		"INSERT INTO "+table+" (login) VALUES ($1) RETURNING id", u.Login,
+	return r.DB.QueryRow(
+		"INSERT INTO "+tableUser+" (login) VALUES ($1) RETURNING id", u.Login,
 	).Scan(
-		u.Id,
+		&u.Id,
 	)
 }
 
 // Update create new apikey
 func (r *UserRepository) Update(u *model.Users) error {
-	return r.Store.Db.QueryRow(
-		"UPDATE "+table+" SET login = $1 WHERE login = $1", u.Login,
+	return r.DB.QueryRow(
+		"UPDATE "+tableUser+" SET login = $1 WHERE login = $1 RETURNING id", u.Login,
 	).Scan(
 		&u.Id,
 	)
@@ -30,8 +30,8 @@ func (r *UserRepository) Update(u *model.Users) error {
 
 func (r *UserRepository) GetByLogin(login string) (*model.Users, error) {
 	u := &model.Users{}
-	if err := r.Store.Db.QueryRow(
-		"SELECT id, created_at, updated_at, login, apikey FROM "+table+" WHERE login = $1", login,
+	if err := r.DB.QueryRow(
+		"SELECT id, created_at, updated_at, login, apikey FROM "+tableUser+" WHERE login = $1", login,
 	).Scan(
 		&u.Id,
 		&u.Create,
@@ -47,8 +47,8 @@ func (r *UserRepository) GetByLogin(login string) (*model.Users, error) {
 
 func (r *UserRepository) GetByLoginKey(login string, key string) (*model.Users, error) {
 	u := &model.Users{}
-	if err := r.Store.Db.QueryRow(
-		"SELECT id FROM "+table+" WHERE login = $1 AND apikey = $2",
+	if err := r.DB.QueryRow(
+		"SELECT id FROM "+tableUser+" WHERE login = $1 AND apikey = $2",
 		login,
 		key,
 	).Scan(
