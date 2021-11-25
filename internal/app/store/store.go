@@ -60,6 +60,17 @@ func (s *Store) GetUserLogin(login string, key string) (int, error) {
 }
 
 func (s *Store) GetPointsFromCity(city string) ([]byte, error) {
-	p := s.Point().GetByCity(city)
+	p, err := s.Point().GetByCity(city)
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(p)
+}
+
+func (s *Store) GetPointsFromZip(zip string) ([]byte, error) {
+	p, err := s.Point().GetByZip(zip)
+	if err != nil {
+		return nil, err
+	}
 	return json.Marshal(p)
 }

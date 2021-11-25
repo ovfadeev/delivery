@@ -2,6 +2,7 @@ package server
 
 import (
 	"delivery/internal/app/store"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -62,18 +63,30 @@ func (s *Server) handlePoints() http.HandlerFunc {
 		hL, hK := s.getHeaderForAuth(r.Header)
 
 		if hL != "" && hK != "" {
-			s.logger.Info(s.msgReqPointsSuccess(hL, r.RemoteAddr))
-
+			e := false
 			idU, err := s.store.GetUserLogin(hL, hK)
 			if err != nil || idU < 0 {
 				s.logger.Error(err.Error())
 				http.Error(w, s.msgErrorNoLogin(), http.StatusBadRequest)
 			} else {
-				p, err := s.store.GetPointsFromCity(r.URL.Query().Get("city"))
-				if err != nil {
-					s.logger.Error(err.Error())
+				if z := r.URL.Query().Get("zip"); z != "" {
+					l, err := s.store.GetPointsFromZip(z)
+					if err != nil {
+						e = true
+						s.logger.Error(fmt.Sprintf("Request zip: %s. ", z), err.Error())
+					}
+					w.Write(l)
+				} else if c := r.URL.Query().Get("city"); c != "" {
+					l, err := s.store.GetPointsFromCity(c)
+					if err != nil {
+						e = true
+						s.logger.Error(fmt.Sprintf("Request sity: %s. ", c), err.Error())
+					}
+					w.Write(l)
 				}
-				w.Write(p)
+			}
+			if !e {
+				s.logger.Info(s.msgReqPointsSuccess(hL, r.RemoteAddr))
 			}
 		} else {
 			s.logger.Error(s.msgReqPointsFail(hL, r.RemoteAddr))
