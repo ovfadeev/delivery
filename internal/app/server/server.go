@@ -64,12 +64,12 @@ func (s *Server) handlePoints() http.HandlerFunc {
 		if hL != "" && hK != "" {
 			s.logger.Info(s.msgReqPointsSuccess(hL, r.RemoteAddr))
 
-			uM, err := s.store.User().GetByLoginKey(hL, hK)
-			if err != nil || uM.Id < 0 {
+			idU, err := s.store.GetUserLogin(hL, hK)
+			if err != nil || idU < 0 {
 				s.logger.Error(err.Error())
 				http.Error(w, s.msgErrorNoLogin(), http.StatusBadRequest)
 			} else {
-				p, err := s.getPointsFromCity(r.URL.Query().Get("city"))
+				p, err := s.store.GetPointsFromCity(r.URL.Query().Get("city"))
 				if err != nil {
 					s.logger.Error(err.Error())
 				}

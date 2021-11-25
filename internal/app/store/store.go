@@ -3,6 +3,7 @@ package store
 import (
 	"database/sql"
 	"delivery/internal/app/model/repository"
+	"encoding/json"
 	_ "github.com/lib/pq"
 )
 
@@ -50,4 +51,15 @@ func (s *Store) Point() *repository.PointRepository {
 	}
 
 	return s.point
+}
+
+func (s *Store) GetUserLogin(login string, key string) (int, error) {
+	u, err := s.User().GetByLoginKey(login, key)
+	return u.Id, err
+
+}
+
+func (s *Store) GetPointsFromCity(city string) ([]byte, error) {
+	p := s.Point().GetByCity(city)
+	return json.Marshal(p)
 }
