@@ -28,8 +28,6 @@ func (r *PointRepository) Update(p *model.Point) error {
 	)
 }
 
-
-
 func (r *PointRepository) getByOneParam(param string, value string) (map[int]struct{ model.Point }, error) {
 	l := make(map[int]struct{ model.Point })
 	rows, err := r.DB.Query("SELECT * FROM "+tablePoint+" WHERE "+param+" = $1", value)
