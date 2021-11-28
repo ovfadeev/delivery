@@ -1,8 +1,8 @@
 package model
 
 type Point struct {
-	Id int
-	created_at string
-	updated_at string
-	active bool
+	Id         int    `json: "id"`
+	Created_at string `json: "created_at"`
+	Updated_at string `json: "updated_at"`
+	Active     bool   `json: "active"`
 }

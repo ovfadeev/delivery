@@ -34,8 +34,8 @@ func (r *UserRepository) GetByLogin(login string) (*model.Users, error) {
 		"SELECT id, created_at, updated_at, login, apikey FROM "+tableUser+" WHERE login = $1", login,
 	).Scan(
 		&u.Id,
-		&u.Create,
-		&u.Update,
+		&u.Created_at,
+		&u.Updated_at,
 		&u.Login,
 		&u.Apikey,
 	); err != nil {
