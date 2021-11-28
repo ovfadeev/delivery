@@ -13,10 +13,6 @@ type Store struct {
 	point *repository.PointRepository
 }
 
-func New(config *Config) *Store {
-	return &Store{}
-}
-
 func (s *Store) Open(DBUrl string) error {
 	db, err := sql.Open("postgres", DBUrl)
 	if err != nil {

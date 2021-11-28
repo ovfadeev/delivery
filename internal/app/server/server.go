@@ -45,13 +45,13 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) configStore() error {
-	st := store.New(s.config.Store)
+	st := store.Store{}
 
 	if err := st.Open(s.config.DBUrl); err != nil {
 		return err
 	}
 
-	s.pkg.store = st
+	s.pkg.store = &st
 
 	s.pkg.logger.Info("Database connected successful")
 
