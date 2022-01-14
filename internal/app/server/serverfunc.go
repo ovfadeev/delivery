@@ -28,7 +28,8 @@ func (s *Server) getPoints(param string, value string) ([]byte, error) {
 	if param == "zip" && len(value) > 0 {
 		l, err := s.pkg.store.GetPointsFromZip(value)
 		return l, err
-	} else if param == "city" && len(value) > 0 {
+	}
+	if param == "city" && len(value) > 0 {
 		l, err := s.pkg.store.GetPointsFromCity(value)
 		return l, err
 	}
