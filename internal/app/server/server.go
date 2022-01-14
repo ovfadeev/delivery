@@ -2,9 +2,10 @@ package server
 
 import (
 	"delivery/internal/app/store"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-	"net/http"
 )
 
 type Server struct {
@@ -73,5 +74,6 @@ func (s *Server) configLogger() error {
 }
 
 func (s *Server) configRouter() {
-	s.pkg.router.HandleFunc("/pickup", s.handlePickup()) // default method get
+	s.pkg.router.HandleFunc("/pickup", s.handlePickup())   // default method get
+	s.pkg.router.HandleFunc("/courier", s.handleCourier()) // default method get
 }
