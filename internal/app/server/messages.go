@@ -3,29 +3,19 @@ package server
 import "fmt"
 
 var (
-	errorNoLogin      = "Access danied"
-	reqPointsSuccess  = "User: %s, requested points successful. Client IP: %s"
-	reqPointsFail     = "User: %s, requested points error auth. Client IP: %s"
-	reqCourierSuccess = "User: %s, requested courier successful. Client IP: %s"
-	reqCourierFail    = "User: %s, requested courier error auth. Client IP: %s"
+	errorNoLogin = "Access danied"
+	reqSuccess   = "User: %s. Request successful. Client IP: %s. URL: %s"
+	reqFail      = "User: %s, Request error auth. Client IP: %s. URL: %s"
 )
 
 func (s *Server) msgErrorNoLogin() string {
 	return errorNoLogin
 }
 
-func (s *Server) msgReqPointsSuccess(user string, ip string) string {
-	return fmt.Sprintf(reqPointsSuccess, user, ip)
+func (s *Server) msgReqSuccess(user string, ip string, url string) string {
+	return fmt.Sprintf(reqSuccess, user, ip, url)
 }
 
-func (s *Server) msgReqPointsFail(user string, ip string) string {
-	return fmt.Sprintf(reqPointsFail, user, ip)
-}
-
-func (s *Server) msgReqCourierSuccess(user string, ip string) string {
-	return fmt.Sprintf(reqCourierSuccess, user, ip)
-}
-
-func (s *Server) msgReqCourierFail(user string, ip string) string {
-	return fmt.Sprintf(reqCourierFail, user, ip)
+func (s *Server) msgReqFail(user string, ip string, url string) string {
+	return fmt.Sprintf(reqFail, user, ip, url)
 }
