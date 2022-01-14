@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 func (s *Server) auth(header http.Header) (bool, string, error) {
@@ -24,13 +25,13 @@ func (s *Server) getData() {
 
 }
 
-func (s *Server) getPoints(param string, value string) ([]byte, error) {
-	if param == "zip" && len(value) > 0 {
-		l, err := s.pkg.store.GetPointsFromZip(value)
+func (s *Server) getPoints(query url.Values) ([]byte, error) {
+	if query["param"][0] == "zip" && len(query["value"][0]) > 0 {
+		l, err := s.pkg.store.GetPointsFromZip(query["value"][0])
 		return l, err
 	}
-	if param == "city" && len(value) > 0 {
-		l, err := s.pkg.store.GetPointsFromCity(value)
+	if query["param"][0] == "city" && len(query["value"][0]) > 0 {
+		l, err := s.pkg.store.GetPointsFromCity(query["value"][0])
 		return l, err
 	}
 

@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -19,11 +18,9 @@ func (s *Server) handlePickup() http.HandlerFunc {
 		if res {
 			s.pkg.logger.Info(s.msgReqSuccess(login, r.RemoteAddr, r.RequestURI, r.Method))
 
-			p, v := r.URL.Query().Get("param"), r.URL.Query().Get("value")
-
-			l, err := s.getPoints(p, v)
+			l, err := s.getPoints(r.URL.Query())
 			if err != nil {
-				s.pkg.logger.Error(fmt.Sprintf("%s - %s, %s", p, v, err.Error()))
+				s.pkg.logger.Error(err.Error())
 			}
 
 			w.Write(l)
