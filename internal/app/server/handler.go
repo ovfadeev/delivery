@@ -9,8 +9,15 @@ func (s *Server) handlePickup() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		res, login, _ := s.auth(r.Header)
 
+		if r.Method != "GET" {
+			s.pkg.logger.Info(s.msgReqFail(login, r.RemoteAddr, r.RequestURI, r.Method))
+			s.pkg.logger.Error(s.msgErrorMethod())
+			http.Error(w, s.msgErrorMethod(), http.StatusUnauthorized)
+			return
+		}
+
 		if res {
-			s.pkg.logger.Info(s.msgReqSuccess(login, r.RemoteAddr, r.RequestURI))
+			s.pkg.logger.Info(s.msgReqSuccess(login, r.RemoteAddr, r.RequestURI, r.Method))
 
 			p, v := r.URL.Query().Get("param"), r.URL.Query().Get("value")
 
@@ -21,7 +28,7 @@ func (s *Server) handlePickup() http.HandlerFunc {
 
 			w.Write(l)
 		} else {
-			s.pkg.logger.Error(s.msgReqFail(login, r.RequestURI, r.RemoteAddr))
+			s.pkg.logger.Info(s.msgReqFail(login, r.RemoteAddr, r.RequestURI, r.Method))
 			http.Error(w, s.msgErrorNoLogin(), http.StatusUnauthorized)
 		}
 	}
