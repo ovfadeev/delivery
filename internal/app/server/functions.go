@@ -25,11 +25,11 @@ func (s *Server) getData() {
 }
 
 func (s *Server) getPoints(query url.Values) ([]byte, error) {
-	if len(query["zip"][0]) > 0 {
-		s.pkg.logger.
+	if query["zip"][0] != "" {
+		s.pkg.logger.Info(query)
 		l, err := s.pkg.store.GetPointsFromZip(query["zip"][0])
 		return l, err
-	} else if len(query["city"][0]) > 0 {
+	} else if query["city"][0] != "" {
 		l, err := s.pkg.store.GetPointsFromZip(query["city"][0])
 		return l, err
 	}
