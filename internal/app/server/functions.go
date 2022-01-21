@@ -1,14 +1,13 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 )
 
 func (s *Server) auth(header http.Header) (bool, string, error) {
-	login := fmt.Sprintf("%s", header.Get("Login"))
-	key := fmt.Sprintf("%s", header.Get("Key"))
+	login := header.Get("Login") // return string
+	key := header.Get("Key")     // return string
 
 	if login != "" && key != "" {
 		idU, err := s.pkg.store.GetUserLogin(login, key)
@@ -26,12 +25,12 @@ func (s *Server) getData() {
 }
 
 func (s *Server) getPoints(query url.Values) ([]byte, error) {
-	if query["param"][0] == "zip" && len(query["value"][0]) > 0 {
-		l, err := s.pkg.store.GetPointsFromZip(query["value"][0])
+	if len(query["zip"][0]) > 0 {
+		s.pkg.logger.
+		l, err := s.pkg.store.GetPointsFromZip(query["zip"][0])
 		return l, err
-	}
-	if query["param"][0] == "city" && len(query["value"][0]) > 0 {
-		l, err := s.pkg.store.GetPointsFromCity(query["value"][0])
+	} else if len(query["city"][0]) > 0 {
+		l, err := s.pkg.store.GetPointsFromZip(query["city"][0])
 		return l, err
 	}
 
