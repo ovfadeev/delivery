@@ -25,6 +25,7 @@ func init() {
 func main() {
 	flag.Parse()
 
+	// STORE
 	sConfig := store.DefaultConfig()
 	sConfig.DBUrl = fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
@@ -36,11 +37,18 @@ func main() {
 		os.Getenv("DB_SSLMODE"),
 	)
 
+	// API
 	aConfig := api.DefaultConfig()
 
-	// aConfig.Cdek.URL = os.Getenv("CDEK_URL")
-	// aConfig.Cdek.KEY = os.Getenv("CDEK_KEY")
+	// CDEK
+	aConfig.Cdek.URL = os.Getenv("CDEK_URL")
+	aConfig.Cdek.KEY = os.Getenv("CDEK_KEY")
 
+	// DPD
+	aConfig.Dpd.URL = os.Getenv("DPD_URL")
+	aConfig.Dpd.KEY = os.Getenv("DPD_KEY")
+
+	// SHIPTOR
 	aConfig.Shiptor.URL = os.Getenv("SHIPTOR_URL")
 	aConfig.Shiptor.KEY = os.Getenv("SHIPTOR_KEY")
 
