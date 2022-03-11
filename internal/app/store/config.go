@@ -1,7 +1,7 @@
 package store
 
 type Config struct {
-	DbUrl string
+	DBUrl string
 }
 
 func DefaultConfig() *Config {

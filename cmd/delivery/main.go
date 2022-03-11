@@ -1,12 +1,14 @@
 package main
 
 import (
-	"delivery/internal/app/server"
+	"delivery/internal/app/api"
+	"delivery/internal/app/store"
 	"flag"
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 var configPath string
@@ -23,10 +25,8 @@ func init() {
 func main() {
 	flag.Parse()
 
-	config := server.DefaultConfig()
-	config.ServerAddr = os.Getenv("SERVER_ADDR")
-	config.LogLevel = os.Getenv("LOG_LEVEL")
-	config.DBUrl = fmt.Sprintf(
+	sConfig := store.DefaultConfig()
+	sConfig.DBUrl = fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -36,8 +36,12 @@ func main() {
 		os.Getenv("DB_SSLMODE"),
 	)
 
-	s := server.NewConfig(config)
-	if err := s.Start(); err != nil {
-		log.Fatal(err)
-	}
+	aConfig := api.DefaultConfig()
+
+	// aConfig.Cdek.URL = os.Getenv("CDEK_URL")
+	// aConfig.Cdek.KEY = os.Getenv("CDEK_KEY")
+
+	aConfig.Shiptor.URL = os.Getenv("SHIPTOR_URL")
+	aConfig.Shiptor.KEY = os.Getenv("SHIPTOR_KEY")
+
 }
