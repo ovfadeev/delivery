@@ -1,6 +1,7 @@
 package delivery
 
 type Dpd struct {
-	URL string
-	KEY string
+	URL    string
+	CLIENT string
+	KEY    string
 }

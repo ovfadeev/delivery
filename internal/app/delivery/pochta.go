@@ -1,6 +1,6 @@
 package delivery
 
 type Pochta struct {
-	URL string
-	KEY string
+	URL     string
+	ACCOUNT string
 }

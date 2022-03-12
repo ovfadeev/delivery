@@ -1,6 +1,8 @@
 package delivery
 
 type Pickpoint struct {
-	URL string
-	KEY string
+	URL   string
+	LOGIN string
+	PASS  string
+	IKN   string
 }

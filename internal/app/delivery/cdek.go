@@ -1,6 +1,6 @@
 package delivery
 
 type Cdek struct {
-	URL string
-	KEY string
+	URL   string
+	LOGIN string
 }
