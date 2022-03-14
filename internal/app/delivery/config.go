@@ -10,5 +10,12 @@ type Config struct {
 }
 
 func DefaultConfig() *Config {
-	return &Config{}
+	return &Config{
+		Cdek:       &Cdek{},
+		Dpd:        &Dpd{},
+		Pickpoint:  &Pickpoint{},
+		Pochta:     &Pochta{},
+		Redexpress: &Redexpress{},
+		Shiptor:    &Shiptor{},
+	}
 }

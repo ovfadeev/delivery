@@ -1,6 +1,7 @@
 package server
 
 import (
+	"delivery/internal/app/delivery"
 	"delivery/internal/app/store"
 	"net/http"
 
@@ -11,9 +12,10 @@ import (
 type Server struct {
 	config *Config
 	pkg    struct {
-		logger *logrus.Logger
-		router *mux.Router
-		store  *store.Store
+		logger   *logrus.Logger
+		router   *mux.Router
+		store    *store.Store
+		delivery *delivery.Delivery
 	}
 }
 
@@ -21,9 +23,10 @@ func NewConfig(config *Config) *Server {
 	return &Server{
 		config: config,
 		pkg: struct {
-			logger *logrus.Logger
-			router *mux.Router
-			store  *store.Store
+			logger   *logrus.Logger
+			router   *mux.Router
+			store    *store.Store
+			delivery *delivery.Delivery
 		}{logger: logrus.New(), router: mux.NewRouter()},
 	}
 }
