@@ -9,18 +9,18 @@ var (
 	reqFail      = "User: %s, Request error auth. Client IP: %s. URL: %s. Method: %s"
 )
 
-func (s *Server) msgErrorNoLogin() string {
+func (s *Server) MsgErrorNoLogin() string {
 	return errorNoLogin
 }
 
-func (s *Server) msgErrorMethod() string {
+func (s *Server) MsgErrorMethod() string {
 	return errorMethod
 }
 
-func (s *Server) msgReqSuccess(user string, ip string, url string, method string) string {
+func (s *Server) MsgReqSuccess(user string, ip string, url string, method string) string {
 	return fmt.Sprintf(reqSuccess, user, ip, url, method)
 }
 
-func (s *Server) msgReqFail(user string, ip string, url string, method string) string {
+func (s *Server) MsgReqFail(user string, ip string, url string, method string) string {
 	return fmt.Sprintf(reqFail, user, ip, url, method)
 }

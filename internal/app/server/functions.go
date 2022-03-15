@@ -5,7 +5,7 @@ import (
 	"net/url"
 )
 
-func (s *Server) auth(header http.Header) (bool, string, error) {
+func (s *Server) Auth(header http.Header) (bool, string, error) {
 	login := header.Get("Login") // return string
 	key := header.Get("Key")     // return string
 
@@ -20,24 +20,34 @@ func (s *Server) auth(header http.Header) (bool, string, error) {
 	return false, "\"\"", nil
 }
 
-func (s *Server) getData() {
+func (s *Server) GetData() {
 
 }
 
-func (s *Server) getPoints(query url.Values) ([]byte, error) {
-	if query["zip"][0] != "" {
+func (s *Server) GetPoints(query url.Values) ([]byte, error) {
+	//pq := prepareQuery(query)
+	pq := query
+	if pq["zip"][0] != "" {
 		s.pkg.logger.Info(query)
-		l, err := s.pkg.store.GetPointsFromZip(query["zip"][0])
+		l, err := s.pkg.store.GetPointsFromZip(pq["zip"][0])
 		return l, err
 	} else if query["city"][0] != "" {
-		l, err := s.pkg.store.GetPointsFromZip(query["city"][0])
+		l, err := s.pkg.store.GetPointsFromZip(pq["city"][0])
 		return l, err
 	}
 
-	return []byte(""), nil
+	l, err := s.pkg.delivery.GetPoints(pq)
+
+	return l, err
 }
 
-func (s *Server) getCourier(param string, value string) ([]byte, error) {
+func (s *Server) GetCourier(query url.Values) ([]byte, error) {
 
-	return []byte(""), nil
+	l, err := s.pkg.delivery.GetCourier(query)
+	return l, err
 }
+
+// func PrepareQuery(query url.Values) {
+
+// 	//return query
+// }

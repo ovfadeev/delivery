@@ -32,22 +32,26 @@ func NewConfig(config *Config) *Server {
 }
 
 func (s *Server) Start() error {
-	if err := s.configStore(); err != nil {
+	if err := s.ConfigStore(); err != nil {
 		return err
 	}
 
-	if err := s.configLogger(); err != nil {
+	if err := s.ConfigLogger(); err != nil {
 		return err
 	}
 
-	s.configRouter()
+	if err := s.ConfigDelivery(); err != nil {
+		return err
+	}
+
+	s.ConfigRouter()
 
 	s.pkg.logger.Info("Server started successful")
 
 	return http.ListenAndServe(s.config.ServerAddr, s.pkg.router)
 }
 
-func (s *Server) configStore() error {
+func (s *Server) ConfigStore() error {
 	st := store.Store{}
 
 	if err := st.Open(s.config.DBUrl); err != nil {
@@ -61,7 +65,7 @@ func (s *Server) configStore() error {
 	return nil
 }
 
-func (s *Server) configLogger() error {
+func (s *Server) ConfigLogger() error {
 	l, err := logrus.ParseLevel(s.config.LogLevel)
 	if err != nil {
 		return err
@@ -76,7 +80,17 @@ func (s *Server) configLogger() error {
 	return nil
 }
 
-func (s *Server) configRouter() {
-	s.pkg.router.HandleFunc("/pickup", s.handlePickup())   // default method get
-	s.pkg.router.HandleFunc("/courier", s.handleCourier()) // default method get
+func (s *Server) ConfigDelivery() error {
+	dl := delivery.Delivery{}
+
+	dl.NewConfig(s.config.Delivery)
+
+	s.pkg.delivery = &dl
+
+	return nil
+}
+
+func (s *Server) ConfigRouter() {
+	s.pkg.router.HandleFunc("/pickup", s.HandlePickup())   // default method get
+	s.pkg.router.HandleFunc("/courier", s.HandleCourier()) // default method get
 }
