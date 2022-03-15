@@ -25,8 +25,9 @@ func (s *Server) GetData() {
 }
 
 func (s *Server) GetPoints(query url.Values) ([]byte, error) {
-	//pq := prepareQuery(query)
+	// pq := PrepareQuery(query)
 	pq := query
+
 	if pq["zip"][0] != "" {
 		s.pkg.logger.Info(query)
 		l, err := s.pkg.store.GetPointsFromZip(pq["zip"][0])
@@ -48,6 +49,9 @@ func (s *Server) GetCourier(query url.Values) ([]byte, error) {
 }
 
 // func PrepareQuery(query url.Values) {
+// 	// res := map[string][string]{}
 
-// 	//return query
+// 	// for i :=
+
+// 	return query
 // }
